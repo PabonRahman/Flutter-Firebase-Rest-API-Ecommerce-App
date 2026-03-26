@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
               // 🔹 Version text
               Text(
-                '${AppLocalizations.of(context)!.helloWorld} version ${AppConfig.currentAppVersion}',
+                '${AppLocalizations.of(context)!.version} ${AppConfig.currentAppVersion}',
               ),
             ],
           ),

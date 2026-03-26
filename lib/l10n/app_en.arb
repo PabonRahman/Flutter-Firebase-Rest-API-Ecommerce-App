@@ -1,4 +1,10 @@
 {
-  "helloWorld": "Hello World!"
+  "version":"Version",
+  "welcomeBack": "Welcome Back",
+  "enterYourEmailAndPassword": "Enter Your Email and Password",
+  "email": "Email",
+  "password": "Password",
+  "signin": "Sign In"
+
 
 }

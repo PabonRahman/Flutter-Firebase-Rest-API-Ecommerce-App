@@ -36,9 +36,17 @@ class _CraftyBayState extends State<CraftyBay> {
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.red),
           ),
-          hintStyle: TextStyle(
-            fontWeight: FontWeight.w400,
-            color: Colors.grey
+          hintStyle: TextStyle(fontWeight: FontWeight.w400, color: Colors.grey),
+        ),
+
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            fixedSize: const Size.fromWidth(double.maxFinite),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            foregroundColor: Colors.white,
+            backgroundColor: AppColors.themeColor,
           ),
         ),
       ),
@@ -48,7 +56,7 @@ class _CraftyBayState extends State<CraftyBay> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: const Locale('en'),
+      locale: const Locale('bn'),
       supportedLocales: [
         Locale('en'), // English
         Locale('bn'), // Spanish
