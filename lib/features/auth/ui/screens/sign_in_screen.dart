@@ -1,8 +1,10 @@
 import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/core/extensions/localization_extension.dart';
+import 'package:ecommerce/features/auth/ui/screens/sign_up_screen.dart';
 import 'package:ecommerce/features/auth/ui/widgets/app_logo.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -55,10 +57,10 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(height: 8),
 
               TextFormField(
+                obscureText: true, // ✅ correct place
                 decoration: InputDecoration(
                   hintText: context.localization.password,
                 ),
-                obscureText: true, // 🔒 good practice for password
               ),
 
               const SizedBox(height: 16),
@@ -72,16 +74,41 @@ class _SignInScreenState extends State<SignInScreen> {
                   foregroundColor: Colors.white,
                   backgroundColor: AppColors.themeColor,
                 ),
-                onPressed: () {
-                  FirebaseCrashlytics.instance.log('Entered sign in button');
-                  throw Exception('my custom error');
-                },
+                onPressed: () {},
                 child: Text(context.localization.signin),
+              ),
+
+              const SizedBox(height: 24),
+
+              RichText(
+                text: TextSpan(
+                  text: "don't have an account?",
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: "Sign Up",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.themeColor,
+                      ),
+
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = _onTapSignUpButton,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _onTapSignUpButton() {
+    Navigator.pushNamed(context, SignUpScreen.name);
   }
 }

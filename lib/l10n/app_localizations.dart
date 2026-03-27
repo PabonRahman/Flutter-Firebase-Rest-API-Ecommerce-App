@@ -133,6 +133,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign In'**
   String get signin;
+
+  /// No description provided for @registerYourAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Register Your Account'**
+  String get registerYourAccount;
+
+  /// No description provided for @getstartedwithyourdetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started With Your Details'**
+  String get getstartedwithyourdetails;
+
+  /// No description provided for @signup.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up '**
+  String get signup;
+
+  /// No description provided for @firstname.
+  ///
+  /// In en, this message translates to:
+  /// **'first Name '**
+  String get firstname;
+
+  /// No description provided for @lastname.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Mame '**
+  String get lastname;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone '**
+  String get phone;
+
+  /// No description provided for @deliveryaddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Address '**
+  String get deliveryaddress;
+
+  /// No description provided for @enteryourotpcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Your Otp Code'**
+  String get enteryourotpcode;
+
+  /// No description provided for @afourdigitcodehasbeensent.
+  ///
+  /// In en, this message translates to:
+  /// **'A Four Digit Code Has Been Sent'**
+  String get afourdigitcodehasbeensent;
+
+  /// No description provided for @verify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verify;
 }
 
 class _AppLocalizationsDelegate

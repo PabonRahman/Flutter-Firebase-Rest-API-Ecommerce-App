@@ -4,7 +4,19 @@
   "enterYourEmailAndPassword": "Enter Your Email and Password[bn]",
   "email": "ইমেইল",
   "password": "পাসওয়ার্ড",
-  "signin": "সাইন ইন"
+  "signin": "সাইন ইন",
+  "registerYourAccount": "Register Your Account bn",
+  "getstartedwithyourdetails": "Get Started With Your Details bn",
+  "signup": "Sign Up bn",
+  "firstname": "first Name bn",
+  "lastname": "Last Mame bn",
+  "phone": "Phone bn",
+  "deliveryaddress": "Delivery Address bn",
+  "enteryourotpcode": "Enter Your Otp Code bn",
+  "afourdigitcodehasbeensent": "A Four Digit Code Has Been Sent bn",
+  "verify": "Verify bn"
+
+
 
 
 }

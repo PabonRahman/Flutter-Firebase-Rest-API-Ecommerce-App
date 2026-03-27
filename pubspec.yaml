@@ -27,6 +27,7 @@ dependencies:
   fluttertoast: ^8.2.4
   firebase_crashlytics: ^5.1.0
   firebase_analytics: ^12.2.0
+  pin_code_fields:  ^8.0.1
 
 dev_dependencies:
   flutter_test:

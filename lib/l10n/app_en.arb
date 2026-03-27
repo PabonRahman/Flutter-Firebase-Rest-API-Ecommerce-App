@@ -4,7 +4,19 @@
   "enterYourEmailAndPassword": "Enter Your Email and Password",
   "email": "Email",
   "password": "Password",
-  "signin": "Sign In"
+  "signin": "Sign In",
+  "registerYourAccount": "Register Your Account",
+  "getstartedwithyourdetails": "Get Started With Your Details",
+  "signup": "Sign Up ",
+  "firstname": "first Name ",
+  "lastname": "Last Mame ",
+  "phone": "Phone ",
+  "deliveryaddress": "Delivery Address ",
+  "enteryourotpcode": "Enter Your Otp Code",
+  "afourdigitcodehasbeensent": "A Four Digit Code Has Been Sent",
+  "verify": "Verify"
+
+
 
 
 }

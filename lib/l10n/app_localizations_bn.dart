@@ -25,4 +25,34 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get signin => 'সাইন ইন';
+
+  @override
+  String get registerYourAccount => 'Register Your Account bn';
+
+  @override
+  String get getstartedwithyourdetails => 'Get Started With Your Details bn';
+
+  @override
+  String get signup => 'Sign Up bn';
+
+  @override
+  String get firstname => 'first Name bn';
+
+  @override
+  String get lastname => 'Last Mame bn';
+
+  @override
+  String get phone => 'Phone bn';
+
+  @override
+  String get deliveryaddress => 'Delivery Address bn';
+
+  @override
+  String get enteryourotpcode => 'Enter Your Otp Code bn';
+
+  @override
+  String get afourdigitcodehasbeensent => 'A Four Digit Code Has Been Sent bn';
+
+  @override
+  String get verify => 'Verify bn';
 }
