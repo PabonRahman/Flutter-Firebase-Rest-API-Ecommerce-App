@@ -1,11 +1,15 @@
+import 'package:ecommerce/features/common/controllers/main_bottom_nav_bar_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ecommerce/app/assets_path.dart';
 import 'package:ecommerce/features/home/ui/widgets/app_bar_action_button.dart';
 import 'package:ecommerce/features/home/ui/widgets/home_carousel_slider.dart';
 import 'package:ecommerce/features/home/ui/widgets/section_header.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import '../../../../core/extensions/localization_extension.dart';
-import '../widgets/category_item.dart';
+import '../../../common/ul/widgets/category_item.dart';
+import '../widgets/product_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,72 +19,107 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final List<Map<String, dynamic>> categories = [
+    {'title': 'Computers', 'icon': Icons.computer},
+    {'title': 'Phones', 'icon': Icons.phone_android},
+    {'title': 'TVs', 'icon': Icons.tv},
+    {'title': 'Cameras', 'icon': Icons.camera_alt},
+    {'title': 'Headphones', 'icon': Icons.headphones},
+    {'title': 'Watches', 'icon': Icons.watch},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// 🔍 Search Field
-              _buildSearchTextField(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-              const SizedBox(height: 16),
+            /// 🔍 Search
+            _buildSearchTextField(),
+            const SizedBox(height: 16),
 
-              /// 🎯 Carousel Slider
-              const HomeCarouselSlider(),
+            /// 🎯 Slider
+            const HomeCarouselSlider(),
+            const SizedBox(height: 20),
 
-              const SizedBox(height: 16),
+            /// 🧩 Categories
+            SectionHeader(
+              title: context.localization.categories,
+              onTapSeeAll: () {
+                Get.find<MainBottomNavBarController>().moveToCategory();
+              },
+            ),
+            const SizedBox(height: 12),
+            _buildCategorySection(),
 
-              /// 🧩 Section Header
-              SectionHeader(
-                title: context.localization.categories,
-                onTapSeeAll: () {},
-              ),
+            const SizedBox(height: 24),
 
-              const SizedBox(height: 12),
+            /// ⭐ Product Sections (Reusable)
+            _buildProductBlock(context.localization.popular),
+            _buildProductBlock(context.localization.special),
+            _buildProductBlock(context.localization.snew),
 
-              /// 🧱 Horizontal Scrollable Categories
-              SizedBox(height: 120, child: _buildCategorySection()),
-
-              const SizedBox(height: 20),
-
-              /// 🛍 Placeholder for future content (e.g., product grid)
-              const Text(
-                "More Content Coming...",
-                style: TextStyle(fontSize: 16),
-              ),
-
-              const SizedBox(height: 200),
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
 
+  /// 🔁 Reusable Product Block
+  Widget _buildProductBlock(String title) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(
+          title: title,
+          onTapSeeAll: () {},
+        ),
+        const SizedBox(height: 12),
+        _buildProductSection(),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
+
+  /// 🔄 Horizontal Product List
+  Widget _buildProductSection() {
+    return SizedBox(
+      height: 220,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        itemCount: 6,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          return const ProductCard();
+        },
+      ),
+    );
+  }
+
+  /// 🧩 Category List
   Widget _buildCategorySection() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: const [
-          SizedBox(width: 4),
-          CategoryItem(title: 'Computers', icon: Icons.computer),
-          SizedBox(width: 12),
-          CategoryItem(title: 'Phones', icon: Icons.phone_android),
-          SizedBox(width: 12),
-          CategoryItem(title: 'TVs', icon: Icons.tv),
-          SizedBox(width: 12),
-          CategoryItem(title: 'Cameras', icon: Icons.camera_alt),
-          SizedBox(width: 12),
-          CategoryItem(title: 'Headphones', icon: Icons.headphones),
-          SizedBox(width: 12),
-          CategoryItem(title: 'Watches', icon: Icons.watch),
-          SizedBox(width: 12),
-        ],
+    return SizedBox(
+      height: 110,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        itemCount: categories.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          return CategoryItem(
+            title: category['title'],
+            icon: category['icon'],
+          );
+        },
       ),
     );
   }
@@ -90,10 +129,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return TextField(
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
-        fillColor: Colors.grey.shade200,
-        filled: true,
-        hintText: 'Search',
+        hintText: 'Search products...',
         prefixIcon: const Icon(Icons.search),
+        filled: true,
+        fillColor: Colors.grey.shade200,
+        contentPadding: const EdgeInsets.symmetric(vertical: 0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
@@ -105,21 +145,20 @@ class _HomeScreenState extends State<HomeScreen> {
   /// 🔝 App Bar
   AppBar _buildAppBar() {
     return AppBar(
-      title: SvgPicture.asset(AssetsPath.logoNavSvg, height: 30),
+      elevation: 0,
+      title: SvgPicture.asset(
+        AssetsPath.logoNavSvg,
+        height: 28,
+      ),
       actions: [
-        const SizedBox(width: 8),
         AppBarActionButton(icon: Icons.person_outline, onTap: () {}),
-        const SizedBox(width: 8),
         AppBarActionButton(icon: Icons.call, onTap: () {}),
-        const SizedBox(width: 8),
         AppBarActionButton(
           icon: Icons.notifications_active_outlined,
           onTap: () {},
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 8),
       ],
     );
   }
 }
-
-/// ✅ Category Item Widget

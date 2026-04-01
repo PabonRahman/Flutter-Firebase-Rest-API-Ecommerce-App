@@ -1,25 +1,27 @@
+import 'package:ecommerce/features/categories/ui/screens/category_list_screens.dart';
+import 'package:ecommerce/features/common/controllers/main_bottom_nav_bar_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 import '../../../home/ui/screens/home_screen.dart';
 
 class MainBottomNavBarScreen extends StatefulWidget {
   const MainBottomNavBarScreen({super.key});
 
-  static const String name= "/main-nav-bar-screen";
+  static const String name = "/main-nav-bar-screen";
 
   @override
-  State<MainBottomNavBarScreen> createState() =>
-      _MainBottomNavBarScreenState();
+  State<MainBottomNavBarScreen> createState() => _MainBottomNavBarScreenState();
 }
 
-class _MainBottomNavBarScreenState
-    extends State<MainBottomNavBarScreen> {
+class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
 
-  int _selectedIndex = 0;
 
   final List<Widget> _screens = const [
     HomeScreen(),
-    HomeScreen(),
+    CategoryListScreen(),
     HomeScreen(),
     HomeScreen(),
   ];
@@ -27,33 +29,34 @@ class _MainBottomNavBarScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
-
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
+      body: GetBuilder<MainBottomNavBarController>(
+        builder: (controller) {
+          return _screens[controller.selectedIndex];
         },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.category),
-            label: 'Category',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.favorite_border),
-            label: 'Wishlist',
-          ),
-        ],
+      ),
+
+      bottomNavigationBar: GetBuilder<MainBottomNavBarController>(
+        builder: (controller) {
+          return NavigationBar(
+            selectedIndex: controller.selectedIndex,
+            onDestinationSelected: controller.changeIndex,
+            destinations: const [
+              NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+              NavigationDestination(
+                icon: Icon(Icons.category),
+                label: 'Category',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.shopping_cart),
+                label: 'Cart',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.favorite_border),
+                label: 'Wishlist',
+              ),
+            ],
+          );
+        },
       ),
     );
   }
