@@ -223,6 +223,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New'**
   String get snew;
+
+  /// No description provided for @wishlist.
+  ///
+  /// In en, this message translates to:
+  /// **'WishList'**
+  String get wishlist;
+
+  /// No description provided for @productdetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Details'**
+  String get productdetails;
 }
 
 class _AppLocalizationsDelegate

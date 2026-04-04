@@ -9,7 +9,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import '../../../../core/extensions/localization_extension.dart';
 import '../../../common/ul/widgets/category_item.dart';
-import '../widgets/product_card.dart';
+import '../../../common/ul/widgets/product_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

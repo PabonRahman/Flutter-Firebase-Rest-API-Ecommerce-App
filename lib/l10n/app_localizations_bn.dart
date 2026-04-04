@@ -70,4 +70,10 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get snew => 'New bn';
+
+  @override
+  String get wishlist => 'WishList bn';
+
+  @override
+  String get productdetails => 'Product Details bn';
 }
