@@ -11,8 +11,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-
-      onTap: (){
+      onTap: () {
         Navigator.pushNamed(context, ProductDetailsScreen.name);
       },
 
@@ -56,14 +55,14 @@ class ProductCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-      
+
                         Wrap(
                           children: [
                             Icon(Icons.star, size: 18, color: Colors.orange),
                             Text("3.3"),
                           ],
                         ),
-      
+
                         Card(
                           color: AppColors.themeColor,
                           shape: RoundedRectangleBorder(
