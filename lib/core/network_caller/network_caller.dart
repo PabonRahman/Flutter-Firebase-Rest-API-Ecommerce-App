@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
@@ -19,13 +21,22 @@ class NetworkResponse {
 class NetworkCaller {
   final Logger _logger = Logger();
 
+  String? _token;
+
   // ===========================
-  // 🔹 COMMON HEADERS
+  // 🔹 SET TOKEN (for auth)
+  // ===========================
+  void updateToken(String token) {
+    _token = token;
+  }
+
+  // ===========================
+  // 🔹 HEADERS
   // ===========================
   Map<String, String> _headers() {
     return {
       'Content-Type': 'application/json',
-      'token': '', // 🔥 replace with dynamic token if needed
+      if (_token != null) 'token': _token!,
     };
   }
 
@@ -127,15 +138,14 @@ class NetworkCaller {
   // ===========================
   Future<NetworkResponse> deleteRequest({
     required String url,
-    Map<String, dynamic>? body,
   }) async {
     try {
       Uri uri = Uri.parse(url);
 
-      _logRequest(url, _headers(), requestBody: body);
+      _logRequest(url, _headers());
 
       final response = await http
-          .delete(uri, headers: _headers(), body: jsonEncode(body))
+          .delete(uri, headers: _headers())
           .timeout(const Duration(seconds: 30));
 
       _logResponse(url, response);
@@ -150,9 +160,22 @@ class NetworkCaller {
   // 🔹 RESPONSE HANDLER
   // ===========================
   NetworkResponse _handleResponse(http.Response response) {
-    final decodedBody = response.body.isNotEmpty
-        ? jsonDecode(response.body)
-        : null;
+    dynamic decodedBody;
+
+    try {
+      decodedBody =
+      response.body.isNotEmpty ? jsonDecode(response.body) : null;
+    } catch (e) {
+      decodedBody = response.body;
+    }
+
+    String message = 'Request failed';
+
+    if (decodedBody is Map) {
+      message = decodedBody['message'] ??
+          decodedBody['msg'] ??
+          'Request failed';
+    }
 
     if (response.statusCode >= 200 && response.statusCode <= 299) {
       return NetworkResponse(
@@ -171,7 +194,7 @@ class NetworkCaller {
         isSuccess: false,
         statusCode: response.statusCode,
         responseData: decodedBody,
-        errorMessage: 'Request failed',
+        errorMessage: message,
       );
     }
   }
@@ -182,10 +205,18 @@ class NetworkCaller {
   NetworkResponse _handleError(dynamic e) {
     _logger.e('Error => $e');
 
+    String message = 'Something went wrong';
+
+    if (e is SocketException) {
+      message = 'No internet connection';
+    } else if (e.toString().contains('TimeoutException')) {
+      message = 'Request timeout. Try again.';
+    }
+
     return NetworkResponse(
       isSuccess: false,
       statusCode: -1,
-      errorMessage: e.toString(),
+      errorMessage: message,
     );
   }
 
@@ -193,11 +224,13 @@ class NetworkCaller {
   // 🔹 LOGGER
   // ===========================
   void _logRequest(
-    String url,
-    Map<String, dynamic> headers, {
-    Map<String, dynamic>? requestBody,
-  }) {
-    _logger.i("REQUEST =>\nURL: $url\nHeaders: $headers\nBody: $requestBody");
+      String url,
+      Map<String, String> headers, {
+        Map<String, dynamic>? requestBody,
+      }) {
+    _logger.i(
+      "REQUEST =>\nURL: $url\nHeaders: $headers\nBody: $requestBody",
+    );
   }
 
   void _logResponse(String url, http.Response response) {

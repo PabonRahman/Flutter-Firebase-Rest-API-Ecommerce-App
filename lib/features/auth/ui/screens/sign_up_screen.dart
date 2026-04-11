@@ -1,14 +1,15 @@
 import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/core/extensions/localization_extension.dart';
+import 'package:ecommerce/core/widgets/centered_circular_progress_indicator.dart';
+import 'package:ecommerce/core/widgets/show_snack_bar_message.dart';
+import 'package:ecommerce/features/auth/data/models/sign_up_model.dart';
+import 'package:ecommerce/features/auth/ui/controllers/sign_up_controller.dart';
 import 'package:ecommerce/features/auth/ui/screens/verify_otp_screen.dart';
 import 'package:ecommerce/features/auth/ui/widgets/app_logo.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../../../l10n/app_localizations.dart';
+import 'package:get/get.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -20,159 +21,190 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _firstNameTEController = TextEditingController();
   final TextEditingController _lastNameTEController = TextEditingController();
   final TextEditingController _phoneTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final TextEditingController _deliveryAddressTEController =
-      TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController();
+
+  final SignUpController signUpController = Get.find<SignUpController>();
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          // ✅ FIXED: added child:
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                const SizedBox(height: 32),
-                const AppLogo(),
-                const SizedBox(height: 24),
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const SizedBox(height: 32),
+              const AppLogo(),
+              const SizedBox(height: 24),
 
-                Text(
-                  context.localization.registerYourAccount,
-                  style: textTheme.titleLarge,
+              Text(
+                context.localization.registerYourAccount,
+                style: textTheme.titleLarge,
+              ),
+
+              const SizedBox(height: 32),
+
+              // ================= EMAIL =================
+              TextFormField(
+                controller: _emailTEController,
+                decoration: InputDecoration(
+                  hintText: context.localization.email,
                 ),
-                const SizedBox(height: 8),
+                validator: (value) =>
+                value!.trim().isEmpty ? "Enter email" : null,
+              ),
 
-                Text(
-                  context.localization.enterYourEmailAndPassword,
-                  style: const TextStyle(color: Colors.grey, fontSize: 16),
+              const SizedBox(height: 10),
+
+              // ================= FIRST NAME =================
+              TextFormField(
+                controller: _firstNameTEController,
+                decoration: InputDecoration(
+                  hintText: context.localization.firstname,
                 ),
+                validator: (value) =>
+                value!.trim().isEmpty ? "Enter first name" : null,
+              ),
 
-                const SizedBox(height: 32),
+              const SizedBox(height: 10),
 
-                TextFormField(
-                  controller: _emailTEController,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    hintText: context.localization.email,
-                  ),
+              // ================= LAST NAME =================
+              TextFormField(
+                controller: _lastNameTEController,
+                decoration: InputDecoration(
+                  hintText: context.localization.lastname,
                 ),
+                validator: (value) =>
+                value!.trim().isEmpty ? "Enter last name" : null,
+              ),
 
-                const SizedBox(height: 8),
+              const SizedBox(height: 10),
 
-                TextFormField(
-                  controller: _firstNameTEController,
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                    hintText: context.localization.firstname,
-                  ),
+              // ================= PHONE =================
+              TextFormField(
+                controller: _phoneTEController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  hintText: context.localization.phone,
                 ),
+                validator: (value) =>
+                value!.trim().length < 11 ? "Invalid phone" : null,
+              ),
 
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _lastNameTEController,
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                    hintText: context.localization.lastname,
-                  ),
+              const SizedBox(height: 10),
+
+              // ================= PASSWORD =================
+              TextFormField(
+                controller: _passwordTEController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: context.localization.password,
                 ),
+                validator: (value) =>
+                value!.length < 6 ? "Min 6 characters" : null,
+              ),
 
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _phoneTEController,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                    hintText: context.localization.phone,
-                  ),
+              const SizedBox(height: 10),
+
+              // ================= ADDRESS =================
+              TextFormField(
+                controller: _deliveryAddressTEController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: context.localization.deliveryaddress,
+                  contentPadding: const EdgeInsets.all(16),
                 ),
+                validator: (value) =>
+                value!.trim().isEmpty ? "Enter address" : null,
+              ),
 
-                const SizedBox(height: 8),
+              const SizedBox(height: 20),
 
-                TextFormField(
-                  textInputAction: TextInputAction.next,
-                  controller: _passwordTEController,
-                  decoration: InputDecoration(
-                    hintText: context.localization.password,
-                  ),
-                  obscureText: true, // 🔒 good practice for password
-                ),
-
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _deliveryAddressTEController,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    hintText: context.localization.deliveryaddress,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size.fromWidth(double.maxFinite),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    foregroundColor: Colors.white,
-                    backgroundColor: AppColors.themeColor,
-                  ),
-                  onPressed: _onTapSignUpButton,
-                  child: Text(context.localization.signup),
-                ),
-
-                const SizedBox(height: 24),
-
-                RichText(
-                  text: TextSpan(
-                    text: " have an account?",
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "Sign In",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.themeColor,
+              // ================= SIGN UP BUTTON =================
+              GetBuilder<SignUpController>(
+                builder: (controller) {
+                  return Visibility(
+                    visible: controller.signUpInProgress == false,
+                    replacement:
+                    const CenteredCircularProgressIndicator(),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.themeColor,
+                          foregroundColor: Colors.white,
                         ),
-
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = _onTapSignInButton,
+                        onPressed: _onTapSignUpButton,
+                        child: const Text("Sign Up"),
                       ),
-                    ],
-                  ),
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 24),
+
+              // ================= SIGN IN =================
+              RichText(
+                text: TextSpan(
+                  text: "Already have an account? ",
+                  style: const TextStyle(color: Colors.grey),
+                  children: [
+                    TextSpan(
+                      text: "Sign In",
+                      style: const TextStyle(
+                        color: AppColors.themeColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => Get.back(),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  void _onTapSignUpButton() {
-    Navigator.pushNamed(context, VerifyOtpScreen.name);
-  }
+  // ================= SIGN UP FUNCTION =================
+  Future<void> _onTapSignUpButton() async {
+    if (!_formKey.currentState!.validate()) return;
 
-  void _onTapSignInButton() {
-    Navigator.pop(context);
+    final signUpModel = SignUpModel(
+      email: _emailTEController.text.trim(),
+      firstName: _firstNameTEController.text.trim(),
+      lastName: _lastNameTEController.text.trim(),
+      phone: _phoneTEController.text.trim(),
+      password: _passwordTEController.text,
+      deliveryAddress: _deliveryAddressTEController.text.trim(),
+    );
+
+    final bool isSuccess =
+    await signUpController.signUp(signUpModel);
+
+    if (isSuccess) {
+      Navigator.pushNamed(context, VerifyOtpScreen.name);
+    } else {
+      showSnackBarMessage(
+        context,
+        signUpController.errorMessage ?? "Signup failed",
+        true,
+      );
+    }
   }
 
   @override
